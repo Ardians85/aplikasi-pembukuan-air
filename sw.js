@@ -2,7 +2,7 @@
 var GHPATH = '/aplikasi-pembukuan-air';
 
 // Versi cache - ubah angkanya setiap kali Anda update aplikasi
-var VERSION = 'version_01';
+var VERSION = 'version_02';
 
 var CACHE_NAME = 'pembukuan_air_' + VERSION;
 
