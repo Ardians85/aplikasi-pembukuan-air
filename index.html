@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Pembayaran Air - Laporan Bulanan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #ffc107;
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .card h3 {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            margin: 0 5px;
+            font-size: 12px;
+        }
+
+        /* Print Button */
+        .print-btn {
+            float: right;
+            margin-bottom: 20px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+            .form-section, .filter-section, .print-btn, .action-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💧 Aplikasi Pembayaran Air</h1>
+        <div class="subtitle">Laporan Bulanan Pembayaran Air</div>
+
+        <!-- Form Tambah Pembayaran -->
+        <div class="form-section">
+            <h2>Tambah Pembayaran Baru</h2>
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="nama">Nama Pelanggan *</label>
+                    <input type="text" id="nama" required placeholder="Contoh: Ahmad Rizki">
+                </div>
+                
+                <div class="form-group">
+                    <label for="tanggal">Tanggal Pembayaran *</label>
+                    <input type="date" id="tanggal" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nominal">Nominal Pembayaran (Rp) *</label>
+                    <input type="number" id="nominal" required placeholder="Masukkan nominal pembayaran">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bulan">Bulan Pembayaran *</label>
+                    <select id="bulan" required>
+                        <option value="">Pilih Bulan</option>
+                        <option value="Januari">Januari</option>
+                        <option value="Februari">Februari</option>
+                        <option value="Maret">Maret</option>
+                        <option value="April">April</option>
+                        <option value="Mei">Mei</option>
+                        <option value="Juni">Juni</option>
+                        <option value="Juli">Juli</option>
+                        <option value="Agustus">Agustus</option>
+                        <option value="September">September</option>
+                        <option value="Oktober">Oktober</option>
+                        <option value="November">November</option>
+                        <option value="Desember">Desember</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tahun">Tahun *</label>
+                    <input type="number" id="tahun" required placeholder="Contoh: 2024" value="2024">
+                </div>
+                
+                <button type="submit">💾 Simpan Pembayaran</button>
+            </form>
+        </div>
+
+        <!-- Filter Laporan -->
+        <div class="filter-section">
+            <h2 style="margin-bottom: 15px;">🔍 Filter Laporan</h2>
+            <div class="filter-group">
+                <div>
+                    <label for="filterBulan">Filter Bulan</label>
+                    <select id="filterBulan">
+                        <option value="all">Semua Bulan</option>
+                        <option value="Januari">Januari</option>
+                        <option value="Februari">Februari</option>
+                        <option value="Maret">Maret</option>
+                        <option value="April">April</option>
+                        <option value="Mei">Mei</option>
+                        <option value="Juni">Juni</option>
+                        <option value="Juli">Juli</option>
+                        <option value="Agustus">Agustus</option>
+                        <option value="September">September</option>
+                        <option value="Oktober">Oktober</option>
+                        <option value="November">November</option>
+                        <option value="Desember">Desember</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="filterTahun">Filter Tahun</label>
+                    <input type="number" id="filterTahun" placeholder="Tahun" value="2024">
+                </div>
+                
+                <div>
+                    <label for="filterNama">Filter Nama</label>
+                    <input type="text" id="filterNama" placeholder="Cari nama pelanggan...">
+                </div>
+                
+                <div style="display: flex; align-items: end;">
+                    <button onclick="applyFilters()" style="width: 100%;">🔍 Tampilkan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ringkasan -->
+        <div class="summary-cards" id="summaryCards">
+            <div class="card">
+                <h3>Total Pembayaran</h3>
+                <div class="value" id="totalPembayaran">Rp 0</div>
+            </div>
+            <div class="card">
+                <h3>Jumlah Transaksi</h3>
+                <div class="value" id="jumlahTransaksi">0</div>
+            </div>
+            <div class="card">
+                <h3>Total Pelanggan</h3>
+                <div class="value" id="totalPelanggan">0</div>
+            </div>
+            <div class="card">
+                <h3>Rata-rata Pembayaran</h3>
+                <div class="value" id="rataRata">Rp 0</div>
+            </div>
+        </div>
+
+        <!-- Tombol Print -->
+        <button onclick="printReport()" class="print-btn">🖨️ Cetak Laporan</button>
+        <button onclick="exportToCSV()" class="print-btn" style="margin-right: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📊 Export CSV</button>
+        <button onclick="resetAllData()" class="print-btn" style="margin-right: 10px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">🗑️ Reset Semua Data</button>
+
+        <!-- Tabel Laporan -->
+        <div style="clear: both;"></div>
+        <div class="table-container">
+            <table id="reportTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Pelanggan</th>
+                        <th>Tanggal</th>
+                        <th>Bulan</th>
+                        <th>Tahun</th>
+                        <th>Nominal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="7" style="text-align: center;">Belum ada data pembayaran</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
