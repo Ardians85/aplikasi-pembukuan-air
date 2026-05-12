@@ -1,5 +1,5 @@
 // Ganti dengan nama repository GitHub Anda
-var GHPATH = '/nama-repository-anda';
+var GHPATH = '/aplikasi-pembukuan-air';
 
 // Versi cache - ubah angkanya setiap kali Anda update aplikasi
 var VERSION = 'version_01';
